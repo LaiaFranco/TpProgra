@@ -173,7 +173,7 @@ void Menu::OpcionGestionUsuarios(int opcion){
     case 4:{
         system("pause");
         system("cls");
-        _userMan.ListarUsuarios();
+        //_userMan.ListarUsuarios();
     }
     case 5:
 

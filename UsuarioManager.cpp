@@ -280,7 +280,7 @@ void UsuarioManager::ModificarUsuario(int opcion){
 }
 void UsuarioManager::ListarUsuarios(int opcion){
     int cantidadRegistros = _UserArchi.getCantidadRegistro();
-    Usuario *vecRegistros = new Usuario[cantidadRegistros;
+    Usuario *vecRegistros = new Usuario[cantidadRegistros];
 
 
     _UserArchi.LeerTodos(vecRegistros,cantidadRegistros);
@@ -317,8 +317,8 @@ void UsuarioManager::ListarUsuarios(int opcion){
             break;
         }
     }
-    for(int i=0;i<cantidad;i++){
-        MostrarCliente(vecRegistros[i]);
+    for(int i=0;i<cantidadRegistros;i++){
+        MostrarUsuario(vecRegistros[i]);
         cout<<"-----------------"<<endl;
     }
     break;
@@ -350,16 +350,9 @@ void UsuarioManager::ListarUsuarios(int opcion){
         }
     }
     for(int i=0;i<cantidadRegistros;i++){
-        MostrarCliente(vecRegistros[i]);
+        MostrarUsuario(vecRegistros[i]);
         cout<<"-----------------"<<endl;
     }
-
-
-
-
-
-
-
 
     delete[]vecRegistros;
     break;
@@ -367,8 +360,8 @@ void UsuarioManager::ListarUsuarios(int opcion){
 
 }
 
-Usuario *UsuarioManager::OrdenarVecApellido(Usuario vec[],int tam){
-     for(int i=0; i<tam;i++){
+void UsuarioManager::OrdenarVecApellido(Usuario vec[],int tam){
+     for(int i=0; i<tam; i++){
         bool intercambio = false;
         for(int j=0;j<tam - 1 -i;j++){
             if(vec > vec[j+1].getPersona().getNombre()){
@@ -382,5 +375,4 @@ Usuario *UsuarioManager::OrdenarVecApellido(Usuario vec[],int tam){
             break;
         }
     }
-        return vec;
 }

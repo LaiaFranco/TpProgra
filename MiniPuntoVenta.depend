@@ -151,14 +151,14 @@
 	<iostream>
 	<limits>
 
-1762466487 c:\users\franc\onedrive\escritorio\proyecto progra\minipuntoventa\minipuntoventa\usuariomanager.h
+1762471596 c:\users\franc\onedrive\escritorio\proyecto progra\minipuntoventa\minipuntoventa\usuariomanager.h
 	"UsuarioArchivo.h"
 	"Usuario.h"
 	"Fecha.h"
 	"Validador.h"
 	<string>
 
-1761868656 source:c:\users\franc\onedrive\escritorio\proyecto progra\minipuntoventa\minipuntoventa\menu.cpp
+1762470583 source:c:\users\franc\onedrive\escritorio\proyecto progra\minipuntoventa\minipuntoventa\menu.cpp
 	"Menu.h"
 	<iostream>
 

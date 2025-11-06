@@ -26,9 +26,7 @@ public:
 
 protected:
     std::string CargarCadena();
-    void MostrarUsuario(Usuario registro);
-    Usuario *OrdenarVecApellido(Usuario vec[],int tam); ///devuelve un puntero al vector ordebnado
-
+    void OrdenarVecApellido(Usuario vec[],int tam); ///devuelve un puntero al vector ordebnado
 
 private:
     UsuarioArchivo _UserArchi;
