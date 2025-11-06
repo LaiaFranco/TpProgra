@@ -24,7 +24,6 @@ public:
 
 
 
-
 protected:
     std::string CargarCadena();
     void MostrarUsuario(Usuario registro);
