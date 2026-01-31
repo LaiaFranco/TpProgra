@@ -46,7 +46,7 @@ string UsuarioManager::getObtenerRol(){
 
 void UsuarioManager::CrearUsuario(){
     Usuario user;
-    int legajo;
+    string legajo;
     string usuario,contrasenia,rol;
     Persona persona;
     int dia,mes,anio;
@@ -62,10 +62,15 @@ void UsuarioManager::CrearUsuario(){
     apellido = CargarCadena();
     cout<<"DNI: ";
     dni = CargarCadena();
-    if(_UserArchi.ValidarDni(dni)){
-        cout<<"DNI INCORRECTO.Numero ya registrado..."<<endl;
+    if(_validar.ValidarTamDni(dni)){
+        cout<<"DNI INCORRECTO."<<endl;
         return;
     }
+    if(_UserArchi.ValidarDni(dni)){
+        cout<<"DNI ya existente..."<<endl;
+        return;
+    }
+    cout<<"LEGAJO: "<<legajo<<endl;
     cout<<"FECHA DE NACIMINETO "<<endl;
     cout<<"DIA: ";
     cin>>dia;
@@ -90,8 +95,8 @@ void UsuarioManager::CrearUsuario(){
     system("pause");
     system("cls");
     cout<<"---DEFINIR NOMBRE DE USUARIO Y CONTRASENIA"<<endl;
-    cout<<"USUARIO: "<<dni;
-    usuario = dni;
+    cout<<"USUARIO: "<<legajo;
+    usuario = legajo;
 
     cout<<endl<<"CONTRASENIA(solo 6 caracteres): ";
     contrasenia = CargarCadena();
@@ -114,7 +119,6 @@ void UsuarioManager::CrearUsuario(){
     if(contrasenia == contrasenia2){
         cout<<"Contrasenia establecida correctamente!!"<<endl;
                 system("pause");
-                system("cls");
 
     }else {
         for(int i=0;i<3;i++){
@@ -144,6 +148,9 @@ void UsuarioManager::CrearUsuario(){
 
     user = Usuario(legajo,usuario,contrasenia,rol,persona);
     if(_UserArchi.guardar(user)){
+       system("cls");
+        MostrarUsuario(user);
+        cout<<endl;
         cout<<"Se guardo correctamente.."<<endl;
     }else{
         cout<<"Hubo un error, no se pudo guardar.."<<endl;
@@ -153,25 +160,28 @@ void UsuarioManager::CrearUsuario(){
 
 int UsuarioManager::Login(string usuario, string contrasenia){
 
-    system ("pause"); ///nos va a devolver 1,2 o cero
+    system ("pause");
     system ("cls");
 
     int cantidadReg = _UserArchi.getCantidadRegistro();
     Usuario *vecUsuarios = new Usuario[cantidadReg];
 
+    _UserArchi.LeerTodos(vecUsuarios,cantidadReg);
+
     for(int i=0;i<cantidadReg; i++){
-            if(vecUsuarios[i].getUsuario() == usuario and vecUsuarios[i].getContrasenia() == contrasenia and vecUsuarios[i].getPersona().getEstado()== true){
+            if(vecUsuarios[i].getUsuario() == usuario && vecUsuarios[i].getContrasenia() == contrasenia && vecUsuarios[i].getPersona().getEstado()== true){
                 if(vecUsuarios[i].getRol() == vecRoles[0]){
+                    delete[]vecUsuarios;
                     return 1;
                 }else if(vecUsuarios[i].getRol() == vecRoles[1]){
+                    delete []vecUsuarios;
                     return 2;
                 }
-            }else{
-                return 0;
             }
+
     }
-    delete[]vecUsuarios;
     return 0;
+    delete[]vecUsuarios;
 
 }
 
@@ -181,9 +191,8 @@ void UsuarioManager::MostrarUsuario(Usuario registro){
     cout<<"ROL: "<<registro.getRol()<<endl;
     cout<<"USUARIO: "<<registro.getUsuario();
     cout<<endl<<"CONSTRASENIA: "<<registro.getContrasenia()<<endl;
-    cout<<endl;
 
-    cout<<endl<<"---DATOS PEROSNALES"<<std::endl<<std::endl;
+    cout<<endl<<"---DATOS PEROSNALES"<<std::endl;
     cout<<"LEGAJO: "<<registro.getLegajo()<<std::endl;
     cout<<"NOMBRE: "<<registro.getPersona().getNombre()<<std::endl;
     cout<<"APELLIDO: "<<registro.getPersona().getApellido()<<std::endl;
@@ -195,13 +204,13 @@ void UsuarioManager::MostrarUsuario(Usuario registro){
 
 }
 void UsuarioManager::EliminarUsuario(){
-    int legajo;
+    string legajo;
     char opcion;
     bool ok;
     Usuario registro;
 
     cout<<"INGRESE LEGAJO: ";
-    cin>>legajo;
+    legajo = CargarCadena();
     int pos = _UserArchi.buscarLegajo(legajo);
     system("pause");
     system("cls");
@@ -215,6 +224,8 @@ void UsuarioManager::EliminarUsuario(){
 }
 void UsuarioManager::MostrarActualizacion(bool ok,Usuario registro){
     if(ok){
+            system("pause");
+            system("cls");
         cout<<"ACTUALIZACION"<<endl;
             cout<<"SE MODIFICO CORRECTAMENTE"<<endl;
             cout<<"---------"<<endl;
@@ -226,11 +237,12 @@ void UsuarioManager::MostrarActualizacion(bool ok,Usuario registro){
 
 
 void UsuarioManager::ModificarUsuario(int opcion){
-    int legajo;
+    string  legajo;
     bool ok;
     Usuario registro;
+
     cout<<"INGRESE LEGAJO DEL EMPLEADO: ";
-    cin>>legajo;
+    legajo = CargarCadena();
 
     int pos = _UserArchi.buscarLegajo(legajo);
     if(pos < 0){
@@ -242,6 +254,8 @@ void UsuarioManager::ModificarUsuario(int opcion){
     cout<<endl;
     switch(opcion){
     case 1:{
+        system("pause");
+        system("cls");
         string  rol;
         rol = getObtenerRol();
         registro.setRol(rol);
@@ -250,6 +264,8 @@ void UsuarioManager::ModificarUsuario(int opcion){
         break;
     }
     case 2:{
+        system("pause");
+        system("cls");
         string telefono;
         cout<<"TELEFONO NUEVO: ";
         telefono = CargarCadena();
@@ -259,6 +275,8 @@ void UsuarioManager::ModificarUsuario(int opcion){
         break;
     }
     case 3:{
+        system("pause");
+        system("cls");
         string direccion;
         cout<<"DIRECCION NUEVA: ";
         direccion = CargarCadena();
@@ -268,6 +286,8 @@ void UsuarioManager::ModificarUsuario(int opcion){
         break;
     }
     case 4:{
+        system("pause");
+        system("cls");
         string mail;
         cout<<"MAIL NUEVO: ";
         mail = CargarCadena();
@@ -300,32 +320,20 @@ void UsuarioManager::ListarUsuarios(int opcion){
                 contador++;
             }
     }
-
     switch(opcion){
     case 1: {
-    for(int i=0; i<cantidadRegistros;i++){
-      bool intercambio = false;
-        for(int j=0;j<cantidadRegistros - 1 -i;j++){
-            if(vecRegistros[j].getPersona().getApellido() > vecRegistros[j+1].getPersona().getApellido()){
-                Usuario aux = vecRegistros[j];
-                vecRegistros[j] = vecRegistros[j+1];
-                vecRegistros[j+1] = aux;
-                intercambio = true;
-            }
-        }
-        if(!intercambio){
-            break;
-        }
-    }
-    for(int i=0;i<cantidadRegistros;i++){
-        MostrarUsuario(vecRegistros[i]);
+        OrdenarVecApellido(vecActivos,cantidaActivos);
+    for(int i=0;i<cantidaActivos;i++){
+        MostrarUsuario(vecActivos[i]);
         cout<<"-----------------"<<endl;
     }
+    delete[]vecActivos;
+    delete[]vecRegistros;
     break;
     }
 
     case 2:{
-        OrdenarVecApellido(vecActivos,cantidaActivos);
+        OrdenarVecNombre(vecActivos,cantidaActivos);
         for(int i=0;i<cantidaActivos;i++){
             MostrarUsuario(vecActivos[i]);
             cout<<"______________________________"<<endl;
@@ -335,36 +343,48 @@ void UsuarioManager::ListarUsuarios(int opcion){
         break;
     }
     case 3:{
-        for(int i=0; i<cantidadRegistros;i++){
-        bool intercambio = false;
-        for(int j=0;j<cantidadRegistros - 1 -i;j++){
-            if(vecRegistros[j].getPersona().getEdad() > vecRegistros[j+1].getPersona().getEdad()){
-                Usuario aux = vecRegistros[j];
-                vecRegistros[j] = vecRegistros[j+1];
-                vecRegistros[j+1] = aux;
-                intercambio = true;
-            }
-        }
-        if(!intercambio){
-            break;
-        }
-    }
-    for(int i=0;i<cantidadRegistros;i++){
-        MostrarUsuario(vecRegistros[i]);
+
+    OrdenarVecEdad(vecActivos,cantidaActivos);
+    for(int i=0;i<cantidaActivos;i++){
+        MostrarUsuario(vecActivos[i]);
         cout<<"-----------------"<<endl;
     }
 
     delete[]vecRegistros;
+    delete[]vecActivos;
     break;
     }
+}
+}
+
+void UsuarioManager::BuscarUsuario(){
+    string legajo;
+    Usuario registro;
+    cout<<"INGRESE LEGAJO DEL EMPLEADO A BUSCAR: "<<endl;
+    legajo = CargarCadena();
+    int pos =_UserArchi.buscarLegajo(legajo);
+
+    while(pos < 0){
+        cout<<"LEGAJO INEXISTENTE"<<endl;
+        cout<<"INGRESE LEGAJO DEL EMPLEADO A BUSCAR: "<<endl;
+        cin>>legajo;
+        int pos =_UserArchi.buscarLegajo(legajo);
+    }
+
+    registro = _UserArchi.leer(pos);
+    system("pause");
+    system("cls");
+    cout<<"DATOS CORRESPONDIENTES A"<<registro.getPersona().getNombre()<<" "<<registro.getPersona().getApellido()<<endl<<endl;
+    MostrarUsuario(registro);
+
 
 }
 
-void UsuarioManager::OrdenarVecApellido(Usuario vec[],int tam){
+void UsuarioManager::OrdenarVecApellido(Usuario *vec,int tam){
      for(int i=0; i<tam; i++){
         bool intercambio = false;
         for(int j=0;j<tam - 1 -i;j++){
-            if(vec > vec[j+1].getPersona().getNombre()){
+            if(vec[j].getPersona().getApellido() > vec[j+1].getPersona().getApellido()){
                 Usuario aux = vec[j];
                 vec[j] = vec[j+1];
                 vec[j+1] = aux;
@@ -374,5 +394,85 @@ void UsuarioManager::OrdenarVecApellido(Usuario vec[],int tam){
         if(!intercambio){
             break;
         }
+    }
+}
+void UsuarioManager::OrdenarVecNombre(Usuario vec[],int tam){
+     for(int i=0; i<tam; i++){
+        bool intercambio = false;
+        for(int j=0;j<tam - 1 -i;j++){
+            if(vec[j].getPersona().getNombre() > vec[j+1].getPersona().getNombre()){
+                Usuario aux = vec[j];
+                vec[j] = vec[j+1];
+                vec[j+1] = aux;
+                intercambio = true;
+            }
+        }
+        if(!intercambio){
+            break;
+        }
+    }
+}
+void UsuarioManager::OrdenarVecEdad(Usuario vec[],int tam){
+    for(int i=0; i<tam; i++){
+        bool intercambio = false;
+        for(int j=0;j<tam - 1 -i;j++){
+            if(vec[j].getPersona().getEdad() > vec[j+1].getPersona().getEdad()){
+                Usuario aux = vec[j];
+                vec[j] = vec[j+1];
+                vec[j+1] = aux;
+                intercambio = true;
+            }
+        }
+        if(!intercambio){
+            break;
+        }
+    }
+}
+string  UsuarioManager::getMostrarNombreCajero(string legajo){
+
+    Usuario registro;
+    int pos = _UserArchi.buscarLegajo(legajo);
+    registro = _UserArchi.leer(pos);
+
+    return registro.getPersona().getNombreCompleto();
+
+}
+
+void UsuarioManager::CambiarContrasenia(string legajo){
+    Usuario registro;
+    string nuevaContrasenia, confirmarContrasenia;
+
+    int pos = _UserArchi.buscarLegajo(legajo);
+    if(pos < 0){
+        cout << "** LEGAJO NO ENCONTRADO **" << endl;
+        return;
+    }
+
+    registro = _UserArchi.leer(pos);
+    MostrarUsuario(registro);
+
+    cout << endl << "INGRESE NUEVA CONTRASENIA: ";
+    nuevaContrasenia = CargarCadena();
+
+    if(!_validar.ValidarContrasenias(nuevaContrasenia)){
+        cout << "** CONTRASENIA INVALIDA **" << endl;
+        return;
+    }
+
+    cout << "CONFIRMAR CONTRASENIA: ";
+    confirmarContrasenia = CargarCadena();
+
+    if(nuevaContrasenia != confirmarContrasenia){
+        cout << "** LAS CONTRASENIAS NO COINCIDEN **" << endl;
+        return;
+    }
+
+    registro.setContrasenia(nuevaContrasenia);
+    bool ok = _UserArchi.guardar(pos, registro);
+
+    if(ok){
+        cout << "** CONTRASENIA CAMBIADA CORRECTAMENTE **" << endl;
+    } else {
+        cout << "** ERROR AL CAMBIAR CONTRASENIA **" << endl;
     }
 }
